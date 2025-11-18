@@ -48,3 +48,4 @@ Forecast summary
 Smart tips
 All graphs (YoY, averages, heatmap)
 Clean formatted PDF with date
+
