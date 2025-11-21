@@ -10,10 +10,10 @@ from yearly_analysis import plot_year_comparison, plot_year_averages
 from report_generator import generate_pdf_report
 from utils import DATA_DIR, FORECAST_DIR, read_csv
 
-# ------------------------- PAGE CONFIG -------------------------
+#  PAGE CONFIG 
 st.set_page_config(page_title="Eco Electricity Dashboard", layout="wide")
 
-# ------------------------- SESSION STATE -------------------------
+#  SESSION STATE 
 if "forecast_out" not in st.session_state:
     st.session_state.forecast_out = None
 
@@ -23,7 +23,7 @@ if "tips_out" not in st.session_state:
 if "year_plots" not in st.session_state:
     st.session_state.year_plots = None
 
-# ------------------------- GREEN ECO CSS -------------------------
+#  GREEN ECO CSS
 st.markdown("""
 <style>
 :root {
@@ -56,15 +56,15 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ------------------ HEADING ------------------
+#  HEADING
 st.markdown("<h2 style='color:#2b8a5f;'>🌿 SmartAI Energy Saver</h2>", unsafe_allow_html=True)
 
-# ------------------ INPUT MODE SWITCH ------------------
+# INPUT MODE SWITCH
 mode = st.radio("Choose Input Method:", ["Upload CSV", "Enter Data Manually"])
 
-# ======================================================================
-# 🟩 MODE 1 — CSV UPLOAD (Your original system)
-# ======================================================================
+
+#  MODE 1 — CSV UPLOAD 
+
 if mode == "Upload CSV":
 
     st.write("Upload your electricity bill CSV to analyze usage trends, forecast bills, and get smart insights.")
@@ -89,7 +89,7 @@ if mode == "Upload CSV":
         df = read_csv(filepath)
         st.success("CSV uploaded successfully!")
 
-        # ------------------ KPI CARDS ------------------
+        #  KPI CARDS 
         col1, col2, col3 = st.columns(3)
 
         this_month = int(df["Units_Consumed_kWh"].iloc[-1])
@@ -120,7 +120,7 @@ if mode == "Upload CSV":
             </div>
             """, unsafe_allow_html=True)
 
-        # ------------------ FORECAST ------------------
+        #  FORECAST 
         st.markdown("<div class='card'><h3>📈 Forecast</h3>", unsafe_allow_html=True)
 
         if st.button("Run Forecast"):
@@ -137,7 +137,7 @@ if mode == "Upload CSV":
 
         st.markdown("</div>", unsafe_allow_html=True)
 
-        # ------------------ SMART TIPS ------------------
+        # SMART TIPS 
         st.markdown("<div class='card'><h3>💡 Smart Tips</h3>", unsafe_allow_html=True)
 
         if st.button("Generate Smart Tips"):
@@ -150,7 +150,7 @@ if mode == "Upload CSV":
 
         st.markdown("</div>", unsafe_allow_html=True)
 
-        # ------------------ YEARLY ANALYSIS ------------------
+        # YEARLY ANALYSIS 
         st.markdown("<div class='card'><h3>📆 Yearly Analysis</h3>", unsafe_allow_html=True)
 
         if st.button("Generate Yearly Comparison Plots"):
@@ -168,7 +168,7 @@ if mode == "Upload CSV":
 
         st.markdown("</div>", unsafe_allow_html=True)
 
-        # ------------------ PDF DOWNLOAD ------------------
+        # PDF DOWNLOAD 
         st.markdown("<div class='card'><h3>📄 Download PDF Report</h3>", unsafe_allow_html=True)
 
         if st.button("Download PDF Report"):
@@ -201,9 +201,9 @@ if mode == "Upload CSV":
         st.markdown("</div>", unsafe_allow_html=True)
 
 
-# ======================================================================
-# 🟦 MODE 2 — MANUAL INPUT MODE (Improved UI)
-# ======================================================================
+
+# MODE 2 — MANUAL INPUT MODE 
+
 if mode == "Enter Data Manually":
 
     st.subheader("📝 Enter Monthly Electricity Usage")
