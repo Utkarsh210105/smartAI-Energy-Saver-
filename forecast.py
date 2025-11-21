@@ -9,7 +9,7 @@ from utils import read_csv, save_json, clean_data, FORECAST_DIR
 
 
 def run_forecast(filepath: str, rate_per_unit: float = 6.0) -> dict:
-    # ---- Read & Clean ----
+    # Read & Clean
     df = read_csv(filepath)
     df = clean_data(df)
 
@@ -19,7 +19,7 @@ def run_forecast(filepath: str, rate_per_unit: float = 6.0) -> dict:
 
     df = df.reset_index(drop=True)
 
-    # ---- Cyclical Encoding for Month Seasonality ----
+    #  Cyclical Encoding for Month Seasonality
     df["sin_month"] = np.sin(2 * np.pi * df["Billing_Month"] / 12)
     df["cos_month"] = np.cos(2 * np.pi * df["Billing_Month"] / 12)
 
@@ -27,25 +27,25 @@ def run_forecast(filepath: str, rate_per_unit: float = 6.0) -> dict:
     X = df[["sin_month", "cos_month"]].values
     y = df[y_col].values
 
-    # ---- Train/Test Split ----
+    #  Train/Test Split 
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.3, random_state=142
     )
 
-    # ---- Random Forest Model ----
+    #  Random Forest Model 
     model = RandomForestRegressor(
         n_estimators=500,
         random_state=42
     )
     model.fit(X_train, y_train)
 
-    # ---- Evaluation Metrics ----
+    # Evaluation Metrics 
     y_pred_test = model.predict(X_test)
 
     mae = float(mean_absolute_error(y_test, y_pred_test))
     r2 = float(r2_score(y_test, y_pred_test))
 
-    # ---- Forecast next month ----
+    # Forecast next month
     next_month = (df["Billing_Month"].iloc[-1] % 12) + 1
 
     next_features = np.array([
@@ -58,10 +58,10 @@ def run_forecast(filepath: str, rate_per_unit: float = 6.0) -> dict:
     predicted_usage = float(model.predict(next_features)[0])
     predicted_bill = float(predicted_usage * rate_per_unit)
 
-    # ---- Predict for full graph ----
+    #  Predict for full graph
     y_pred_full = model.predict(X)
 
-    # ---- Save JSON ----
+    # Save JSON 
     save_json("forecast.json", {
         "previous_months": df.to_dict(orient="records"),
         "predicted_usage_kWh": round(predicted_usage, 2),
@@ -71,7 +71,7 @@ def run_forecast(filepath: str, rate_per_unit: float = 6.0) -> dict:
         "r2_score": round(r2, 4),
     })
 
-    # ---- Plot ----
+    #  Plot 
     plt.figure(figsize=(8, 4))
     sns.lineplot(x=df["Billing_Month"], y=y, marker="o", label="Actual")
     sns.lineplot(x=df["Billing_Month"], y=y_pred_full, label="RF Seasonal Fit")
